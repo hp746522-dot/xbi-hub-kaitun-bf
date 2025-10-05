@@ -29,8 +29,8 @@ task.spawn(function()
 	if success and Noguchi then
 		local function ReplaceText(obj)
 			if obj:IsA("TextLabel") and obj.Text and string.find(obj.Text, "Xbi Hub") then
-				obj.Text = string.gsub(obj.Text, "Xbi Hub%- Kaitun", "Lonely Stats Checker")
-				obj.Text = string.gsub(obj.Text, "Xbi Hub", "Lonely Stats Checker")
+				obj.Text = string.gsub(obj.Text, "Xbi Hub%- Kaitun", "Xbi Stats Checker")
+				obj.Text = string.gsub(obj.Text, "Xbi Hub", "Xbi Stats Checker")
 			end
 		end
 
