@@ -1,0 +1,122 @@
+repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
+
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+--=============================
+-- THREAD 1: COREGUI / STATUS
+--=============================
+task.spawn(function()
+	local success, StatusGui = pcall(function()
+		return CoreGui:WaitForChild("Status", math.huge)
+	end)
+	if success and StatusGui then
+		StatusGui.Enabled = true
+		local Label = StatusGui:WaitForChild("TextLabel", math.huge)
+		Label.Text = "https://discord.gg/PPQUUVRt32"
+	end
+end)
+
+--=============================
+-- THREAD 2: NOGUCHI TEXT REPLACER
+--=============================
+task.spawn(function()
+	local success, Noguchi = pcall(function()
+		return PlayerGui:WaitForChild("Noguchi", math.huge)
+	end)
+	if success and Noguchi then
+		local function ReplaceText(obj)
+			if obj:IsA("TextLabel") and obj.Text and string.find(obj.Text, "Xbi Hub") then
+				obj.Text = string.gsub(obj.Text, "Xbi Hub%- Kaitun", "Lonely Stats Checker")
+				obj.Text = string.gsub(obj.Text, "Xbi Hub", "Lonely Stats Checker")
+			end
+		end
+
+		for _, v in pairs(Noguchi:GetDescendants()) do
+			ReplaceText(v)
+		end
+
+		Noguchi.DescendantAdded:Connect(function(v)
+			task.wait(0.1)
+			ReplaceText(v)
+		end)
+	end
+end)
+
+--=============================
+-- THREAD 3: CONFIG & LOAD SCRIPT
+--=============================
+task.spawn(function()
+	getgenv().AutoExecute = true 
+	getgenv().SettingFarm = {
+		["Reset Teleport"] = {
+			["Enabled"] = false,
+			["Delay Reset"] = 3,
+			["Item Dont Reset"] = {
+				["Fruit"] = {
+					["Enabled"] = true,
+					["All Fruit"] = true, 
+					["Select Fruit"] = {
+						["Enabled"] = false,
+						["Fruit"] = {},
+					},
+				},
+			},
+		},
+		["White Screen"] = false,
+		["Lock Fps"] = {
+			["Enabled"] = true,
+			["FPS"] = 360,
+		},
+		["Get Items"] = {
+			["Saber"] = true,
+			["Godhuman"] =  true,
+			["Skull Guitar"] = true,
+			["Mirror Fractal"] = true,
+			["Cursed Dual Katana"] = true,
+			["Upgrade Race V2-V3"] = true,
+			["Auto Pull Lever"] = true,
+			["Shark Anchor"] = true, -- cdk, sg, godhuman
+		},
+		["Get Rare Items"] = {
+			["Rengoku"] = false,
+			["Dragon Trident"] = false, 
+			["Pole (1st Form)"] = false,
+			["Gravity Blade"]  = false,
+		},
+		["Farm Fragments"] = {
+			["Enabled"]  = false,
+			["Fragment"] = 50000,
+		},
+		["Auto Chat"] = {
+			["Enabled"] = true,
+			["Text"] = "Xbi Hub Kaitun BF",
+		},
+		["Auto Summon Rip Indra"] = true,
+		["Select Hop"] = {
+			["Hop Server If Have Player Near"] = false, 
+			["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = true, 
+			["Hop Find Dough King Get Mirror Fractal"] = false,
+			["Hop Find Raids Castle [CDK]"] = true,
+			["Hop Find Cake Queen [CDK]"] = true,
+			["Hop Find Soul Reaper [CDK]"] = true,
+			["Hop Find Darkbeard [SG]"] = true,
+			["Hop Find Mirage [ Pull Lever ]"] = false,
+		},
+		["Farm Mastery"] = {
+			["Melee"] = false,
+			["Sword"] = false,
+		},
+		["Buy Haki"] = {
+			["Enhancement"] = false,
+			["Skyjump"] = true,
+			["Flash Step"] = true,
+			["Observation"] = true,
+		},
+	}
+
+	-- Load script chính
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TeddyHub-kaitunBF.lua"))()
+end)
